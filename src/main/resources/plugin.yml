@@ -1,0 +1,9 @@
+name: PandoraCurse
+version: ${project.version}
+main: me.nanigans.pandoracurse.PandoraCurse
+authors: [ProNanigans]
+description: Anti-Curse plugin for PandoraPVP
+commands:
+  addswear:
+    description: Add a new swear word
+    usage: /addswear <word>
