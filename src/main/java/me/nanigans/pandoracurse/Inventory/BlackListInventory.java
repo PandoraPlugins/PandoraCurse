@@ -219,4 +219,31 @@ public class BlackListInventory implements Listener {
 
     }
 
+    public Player getPlayer() {
+        return player;
+    }
+
+    public boolean isAlertStaff() {
+        return alertStaff;
+    }
+
+    public boolean isFuzzySet() {
+        return fuzzySet;
+    }
+
+    public boolean isHighSensitivity() {
+        return highSensitivity;
+    }
+
+    public int getFuzzyTolerance() {
+        return fuzzyTolerance;
+    }
+
+    public String getBannedWord() {
+        return bannedWord;
+    }
+
+    public static PandoraCurse getPlugin() {
+        return plugin;
+    }
 }
