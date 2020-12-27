@@ -14,10 +14,10 @@ public class BlackListWords {
 
     public boolean addWord() {
 
-        final YamlGenerator yaml = new YamlGenerator("BlacklistedWords.yml");
+        final YamlGenerator yaml = new YamlGenerator(BlackListInventory.getPlugin().getDataFolder().getAbsolutePath()+"/BlacklistedWords.yml");
 
         final Map<String, Object> words = YamlGenerator.getConfigSectionValue(yaml.getData().get("Words"), false);
-        if(!words.containsKey(this.word.getBannedWord())){
+        if(words == null || !words.containsKey(this.word.getBannedWord())){
 
             Map<String, Object> data = new HashMap<>();
             data.put("alertStaff", this.word.isAlertStaff());

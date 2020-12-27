@@ -11,8 +11,10 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -85,17 +87,24 @@ public class BlackListInventory implements Listener {
         }
     }
 
+    @EventHandler
+    public void onInvClose(InventoryCloseEvent event){
+        if(event.getPlayer().getUniqueId().equals(this.player.getUniqueId())){
+            if(event.getInventory().equals(this.inv) && !this.switching){
+                HandlerList.unregisterAll(this);
+            }
+        }
+    }
+
     private void confirm(InventoryClickEvent event){
         player.closeInventory();
-
         final BlackListWords blackListWords = new BlackListWords(this);
-        if (blackListWords.addWord()) {
+        if (!blackListWords.addWord()) {
             player.sendMessage(ChatColor.RED+"This word is already blacklisted");
             return;
         }
         player.playSound(player.getLocation(), Sound.valueOf("LEVEL_UP"), 1, 1);
         player.sendMessage(ChatColor.GREEN+"Swear word added!");
-
     }
 
     private void cancel(InventoryClickEvent event){
