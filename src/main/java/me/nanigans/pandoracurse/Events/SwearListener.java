@@ -110,6 +110,11 @@ public class SwearListener implements Listener {
 
     }
 
+    /**
+     * Logs the message to console and a text file
+     * @param player player to log the messag from
+     * @param message the message to log
+     */
     public void logWord(FPlayer player, String message){
 
         try {

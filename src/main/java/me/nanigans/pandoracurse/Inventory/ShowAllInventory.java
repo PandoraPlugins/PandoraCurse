@@ -14,6 +14,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -31,6 +32,7 @@ public class ShowAllInventory implements Listener {
     private int page = 1;
     private Inventory inv;
     private boolean canDelete;
+    private boolean switching = false;
     private final boolean canEdit;
     private final static PandoraCurse plugin = PandoraCurse.getPlugin(PandoraCurse.class);
     private final Map<Integer, ItemStack> items = new HashMap<Integer, ItemStack>(){{
@@ -63,6 +65,16 @@ public class ShowAllInventory implements Listener {
                 return;
             }
              onNormalClick(event);
+        }
+    }
+
+    @EventHandler
+    public void onCLose(InventoryCloseEvent event){
+        if(event.getInventory().equals(this.inv)){
+            if(event.getPlayer().getUniqueId().equals(this.player.getUniqueId())){
+                if(!this.switching)
+                HandlerList.unregisterAll(this);
+            }
         }
     }
 
@@ -105,22 +117,43 @@ public class ShowAllInventory implements Listener {
             event.getClickedInventory().setItem(slot, null);
     }
 
+    /**
+     * Page forward if next page exists
+     * @param clicked item clicked
+     */
     private void pageForward(ItemStack clicked){
         final int size = BlackListWords.getAllWords().size();
         int nextPage = (int) Math.min(Math.floor((double)size/45), page+1);
         if(nextPage > page){
             this.page = nextPage;
-            createInv();
+            swapInvs(createInv());
         }
     }
+
+    /**
+     * Page back if it exists
+     * @param clicked item clicked
+     */
     private void pageBack(ItemStack clicked){
         int nextPage = Math.max(1, this.page-1);
         if(nextPage < this.page){
             this.page = nextPage;
-            createInv();
+            swapInvs(createInv());
+
         }
     }
 
+    private void swapInvs(Inventory to){
+        this.switching = true;
+        this.inv = to;
+        player.openInventory(to);
+        this.switching = false;
+    }
+
+    /**
+     * Create a new inventory that shows all the swears
+     * @return
+     */
     private Inventory createInv(){
 
         final Inventory inv = Bukkit.createInventory(player, 54, "Blacklisted Swears");

@@ -126,6 +126,10 @@ public class BlackListInventory implements Listener {
         player.closeInventory();
     }
 
+    /**
+     * Back to main page
+     * @param event
+     */
     private void back(InventoryClickEvent event){
         this.fuzzySet = false;
         this.fuzzyTolerance = this.oldTolerance;
@@ -134,6 +138,10 @@ public class BlackListInventory implements Listener {
         this.fuzzyToggle(event);
     }
 
+    /**
+     * Confirm that the fuzzy set value is good
+     * @param event
+     */
     private void confirmFuzzy(InventoryClickEvent event){
         this.fuzzySet = false;
         Inventory inv = createDefaultInv();
@@ -141,6 +149,10 @@ public class BlackListInventory implements Listener {
         this.fuzzyToggle(event);
     }
 
+    /**
+     * Increase fuzzy set tolerance
+     * @param event inv click
+     */
     private void increaseTolerance(InventoryClickEvent event){
         final ItemStack item = inv.getItem(13);
         if(item != null){
@@ -152,6 +164,10 @@ public class BlackListInventory implements Listener {
         }
     }
 
+    /**
+     * Decrease fuzzy set tolerance
+     * @param event
+     */
     private void decreaseTolerance(InventoryClickEvent event){
 
         final ItemStack item = inv.getItem(13);
@@ -165,6 +181,10 @@ public class BlackListInventory implements Listener {
 
     }
 
+    /**
+     * Toggles fuzzy set
+     * @param event
+     */
     private void setToggle(InventoryClickEvent event){
 
         this.oldTolerance = this.fuzzyTolerance;
@@ -186,6 +206,10 @@ public class BlackListInventory implements Listener {
 
     }
 
+    /**
+     * Toggles fuzzy set
+     * @param event
+     */
     private void fuzzyToggle(InventoryClickEvent event){
         this.fuzzySet = !this.fuzzySet;
         ItemStack item;
@@ -206,6 +230,10 @@ public class BlackListInventory implements Listener {
 
     }
 
+    /**
+     * Toggles staff alerts
+     * @param event
+     */
     private void staffToggle(InventoryClickEvent event){
 
         this.alertStaff = !this.alertStaff;
@@ -217,6 +245,10 @@ public class BlackListInventory implements Listener {
         items.replace(6, item);
     }
 
+    /**
+     * Toggles sensitive word search
+     * @param event
+     */
     private void sensitivityToggle(InventoryClickEvent event){
 
         this.highSensitivity = !this.highSensitivity;
@@ -229,6 +261,10 @@ public class BlackListInventory implements Listener {
 
     }
 
+    /**
+     * Changes inventory without cancelling
+     * @param toInv inventory to go to
+     */
     public void swapInventory(Inventory toInv){
         this.switching = true;
         player.openInventory(toInv);
