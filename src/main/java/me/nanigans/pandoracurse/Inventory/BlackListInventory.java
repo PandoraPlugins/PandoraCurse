@@ -38,6 +38,7 @@ public class BlackListInventory implements Listener {
     private int fuzzyTolerance = 0;
     private int oldTolerance = 0;
     private boolean switching = false;
+    private boolean override = false;
     private final String bannedWord;
     private final static PandoraCurse plugin = PandoraCurse.getPlugin(PandoraCurse.class);
     private final Map<String, Methods> methods = new HashMap<String, Methods>(){{
@@ -65,6 +66,20 @@ public class BlackListInventory implements Listener {
     public BlackListInventory(Player player, String word){
         this.player = player;
         this.bannedWord = word;
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        this.inv = createDefaultInv();
+        player.openInventory(this.inv);
+    }
+
+    public BlackListInventory(Player player, String word, Map<String, Object> fromData){
+        this.player = player;
+        this.bannedWord = word;
+        this.override = true;
+        this.alertStaff = Boolean.parseBoolean(fromData.get("alertStaff").toString());
+        this.fuzzySet = Boolean.parseBoolean(fromData.get("useFuzzySet").toString());
+        if(this.fuzzySet)
+        this.fuzzyTolerance = Integer.parseInt(fromData.get("fuzzyTolerance").toString());
+        this.highSensitivity = Boolean.parseBoolean(fromData.get("sensitive").toString());
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         this.inv = createDefaultInv();
         player.openInventory(this.inv);
@@ -99,7 +114,7 @@ public class BlackListInventory implements Listener {
     private void confirm(InventoryClickEvent event){
         player.closeInventory();
         final BlackListWords blackListWords = new BlackListWords(this);
-        if (!blackListWords.addWord()) {
+        if (!blackListWords.addWord(this.override)) {
             player.sendMessage(ChatColor.RED+"This word is already blacklisted");
             return;
         }

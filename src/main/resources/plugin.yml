@@ -3,7 +3,24 @@ version: ${project.version}
 main: me.nanigans.pandoracurse.PandoraCurse
 authors: [ProNanigans]
 description: Anti-Curse plugin for PandoraPVP
+permissions:
+  Swear.Add:
+    description: Allows the user to add a blacklisted swear
+    default: op
+  Swear.Remove:
+    description: Allows the user to remove a blacklisted swear
+    default: op
+  Swear.Edit:
+    description: Allows the user to edit a blacklisted swear
+    default: op
+  Swear.ViewAll:
+    description: Allows the user to view the blacklisted swears
+    default: op
+  Swear.Bypass:
+    description: Allows the user to bypass swear restrictions
+    default: op
 commands:
-  addswear:
-    description: Add a new swear word
-    usage: /addswear <word>
+  swear:
+    description: Allows access to the blacklisted swears
+    usage: /swear <action> <parameters>
+    aliases: [swear add, swear remove, swear]

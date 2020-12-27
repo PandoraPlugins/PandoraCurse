@@ -1,6 +1,8 @@
 package me.nanigans.pandoracurse.Commands;
 
 import me.nanigans.pandoracurse.Inventory.BlackListInventory;
+import me.nanigans.pandoracurse.Inventory.ShowAllInventory;
+import me.nanigans.pandoracurse.SwearWords.BlackListWords;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,23 +13,41 @@ public class Swear implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if(sender instanceof Player){
-
-            if(args.length > 0){
-
+        if(command.getName().equals("swear")) {
+            if (sender instanceof Player) {
                 Player player = ((Player) sender);
-                new BlackListInventory(player, args[0]);
-                return true;
 
-            }else{
-                sender.sendMessage(ChatColor.RED+"Please specify the word to blacklist");
+                if (args.length == 0) {
+                    //new showinventory
+                    new ShowAllInventory(player);
+                } else {
+                    if (args.length > 1) {
+                        if (args[0].equalsIgnoreCase("add")) {
+
+                            new BlackListInventory(player, args[1]);
+
+                        } else if (args[0].equalsIgnoreCase("remove")) {
+
+                            String removeWord = args[1];
+                            BlackListWords.removeWord(removeWord);
+                            sender.sendMessage(ChatColor.GREEN + "Removed word: " + removeWord);
+
+                        }
+
+                        return true;
+                    } else {
+                        sender.sendMessage(ChatColor.RED + "Please specify the word you want to add/remove");
+                        return true;
+                    }
+                }
+
+            } else {
+                sender.sendMessage(ChatColor.RED + "Only players may use this command");
+                return true;
             }
 
-        }else{
-            sender.sendMessage(ChatColor.RED+"Only players may use this command");
-            return true;
+            return false;
         }
-
         return false;
     }
 }
