@@ -2,6 +2,7 @@ package me.nanigans.pandoracurse.Commands;
 
 import me.nanigans.pandoracurse.Inventory.BlackListInventory;
 import me.nanigans.pandoracurse.Inventory.ShowAllInventory;
+import me.nanigans.pandoracurse.PandoraCurse;
 import me.nanigans.pandoracurse.SwearWords.BlackListWords;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -18,8 +19,11 @@ public class Swear implements CommandExecutor {
                 Player player = ((Player) sender);
 
                 if (args.length == 0) {
-                    //new showinventory
-                    new ShowAllInventory(player);
+                    if(PandoraCurse.hasPermsTo(player, "Swear.ViewAll")) {
+                        new ShowAllInventory(player);
+                    } else{
+                        player.sendMessage(ChatColor.RED+"Invalid permissions to see all swears.");
+                    }
                 } else {
                     if (args.length > 1) {
                         if (args[0].equalsIgnoreCase("add")) {
@@ -34,19 +38,16 @@ public class Swear implements CommandExecutor {
 
                         }
 
-                        return true;
                     } else {
                         sender.sendMessage(ChatColor.RED + "Please specify the word you want to add/remove");
-                        return true;
                     }
                 }
 
             } else {
                 sender.sendMessage(ChatColor.RED + "Only players may use this command");
-                return true;
             }
+            return true;
 
-            return false;
         }
         return false;
     }

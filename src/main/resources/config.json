@@ -1,0 +1,6 @@
+{
+  "message": {
+    "messageDeleted": "&cMessage deleted due to having a blacklisted word in it",
+    "staffAlertMsg": "{playerName} has sworn in world: {worldName}. Word said: {word}. Hover over this message to view the full message"
+  }
+}

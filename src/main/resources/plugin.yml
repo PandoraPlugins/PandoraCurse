@@ -19,6 +19,9 @@ permissions:
   Swear.Bypass:
     description: Allows the user to bypass swear restrictions
     default: op
+  Swear.Notify:
+    description: Those with this permission will be able to recieve notifications about someone swearing
+    default: op
 commands:
   swear:
     description: Allows access to the blacklisted swears
