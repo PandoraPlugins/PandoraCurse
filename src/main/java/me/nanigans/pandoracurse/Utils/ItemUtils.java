@@ -25,6 +25,19 @@ public class ItemUtils {
         return item;
 
     }
+    public static ItemStack createItem(String material, String name, int amount, String... nbt){
+
+        ItemStack item = new ItemStack(Material.getMaterial(Integer.parseInt(material.split("/")[0])),
+                1, Byte.parseByte(material.split("/")[1]));
+        item.setAmount(amount);
+
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(name);
+        item.setItemMeta(meta);
+        item = NBTData.setNBT(item, nbt);
+        return item;
+
+    }
 
     /**
      * Creates a new item from a material
