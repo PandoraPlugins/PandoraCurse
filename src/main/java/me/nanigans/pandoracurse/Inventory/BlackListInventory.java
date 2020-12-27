@@ -1,11 +1,13 @@
 package me.nanigans.pandoracurse.Inventory;
 
+
 import me.nanigans.pandoracurse.PandoraCurse;
 import me.nanigans.pandoracurse.Utils.ItemUtils;
 import me.nanigans.pandoracurse.Utils.NBTData;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,10 +16,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
 
 @FunctionalInterface
 interface Methods{
@@ -43,7 +45,7 @@ public class BlackListInventory implements Listener {
        put(2, ItemUtils.createItem("160/5", "Increased Sensitivity", "METHOD~sensitivityToggle"));
        put(6, ItemUtils.createItem("160/5", "Alert Staff", "METHOD~staffToggle"));
        put(13, ItemUtils.createItem(Material.PAPER, "Banned Word"));
-       put(22, ItemUtils.createItem("160/5", "Use Fuzzy Match", "METHOD~fuzzyToggle"));//31 is diamond
+       put(22, ItemUtils.createItem("160/14", "Use Fuzzy Match", "METHOD~fuzzyToggle"));//31 is diamond
        put(39, ItemUtils.createItem("160/14", ChatColor.RED+"Cancel", "METHOD~cancel"));
        put(41, ItemUtils.createItem("160/13", ChatColor.GREEN+"Confirm", "METHOD~confirm"));
     }};
@@ -63,6 +65,7 @@ public class BlackListInventory implements Listener {
             if (item != null){
                 final String method = NBTData.getNBT(item, "METHOD");
                 if(method != null && this.methods.containsKey(method)){
+                    player.playSound(player.getLocation(), Sound.valueOf("CLICK"), 1, 1);
                     this.methods.get(method).execute(event);
                     event.setCancelled(true);
                 }
@@ -76,14 +79,17 @@ public class BlackListInventory implements Listener {
         this.fuzzySet = !this.fuzzySet;
         ItemStack item;
         if(this.fuzzySet){
-            item = ItemUtils.createItem("160/5", "Alert Staff", "METHOD~staffToggle");
-            ItemStack diamond = ItemUtils.createItem(Material.DIAMOND, "Tolerance", "METHOD~setTolerance");
+            item = ItemUtils.createItem("160/5", "Use Fuzzy Match", "METHOD~fuzzyToggle");
+            ItemStack diamond = ItemUtils.createItem(Material.DIAMOND, "Tolerance", "METHOD~setToggle");
             ItemMeta meta = diamond.getItemMeta();
             meta.setLore(Collections.singletonList("Tolerance: " + this.fuzzyTolerance + "%"));
             diamond.setItemMeta(meta);
             event.getClickedInventory().setItem(31, diamond);
 
-        }else item = ItemUtils.createItem("160/14", "Alert Staff", "METHOD~staffToggle");
+        }else{
+            event.getClickedInventory().setItem(31, null);
+            item = ItemUtils.createItem("160/14", "Use Fuzzy Match", "METHOD~fuzzyToggle");
+        }
         event.getClickedInventory().setItem(22, item);
     }
 
