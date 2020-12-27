@@ -86,10 +86,13 @@ public class BlackListInventory implements Listener {
     }
 
     private void confirm(InventoryClickEvent event){
+        player.closeInventory();
 
         final BlackListWords blackListWords = new BlackListWords(this);
-        blackListWords.addWord();
-        player.closeInventory();
+        if (blackListWords.addWord()) {
+            player.sendMessage(ChatColor.RED+"This word is already blacklisted");
+            return;
+        }
         player.playSound(player.getLocation(), Sound.valueOf("LEVEL_UP"), 1, 1);
         player.sendMessage(ChatColor.GREEN+"Swear word added!");
 
