@@ -27,14 +27,16 @@ public class Swear implements CommandExecutor {
                 } else {
                     if (args.length > 1) {
                         if (args[0].equalsIgnoreCase("add")) {
-
+                            if(PandoraCurse.hasPermsTo(player, "Swear.Add"))
                             new BlackListInventory(player, args[1]);
+                            else player.sendMessage(ChatColor.RED+"Invalid permissions to add a swear");
 
                         } else if (args[0].equalsIgnoreCase("remove")) {
-
-                            String removeWord = args[1];
-                            BlackListWords.removeWord(removeWord);
-                            sender.sendMessage(ChatColor.GREEN + "Removed word: " + removeWord);
+                            if(PandoraCurse.hasPermsTo(player, "Swear.Remove")) {
+                                String removeWord = args[1];
+                                BlackListWords.removeWord(removeWord);
+                                sender.sendMessage(ChatColor.GREEN + "Removed word: " + removeWord);
+                            }else player.sendMessage(ChatColor.RED+"Invalid permissions to remove a swear");
 
                         }
 

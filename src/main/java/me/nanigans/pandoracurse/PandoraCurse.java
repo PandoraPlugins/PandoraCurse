@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import me.TechsCode.UltraPermissions.UltraPermissions;
 import me.nanigans.pandoracurse.Commands.Swear;
+import me.nanigans.pandoracurse.Commands.TabCompleter;
 import me.nanigans.pandoracurse.Events.SwearListener;
 import me.nanigans.pandoracurse.Utils.CustomizedObjectTypeAdapter;
 import org.bukkit.entity.Player;
@@ -25,6 +26,8 @@ public final class PandoraCurse extends JavaPlugin {
         // Plugin startup logic
 
         getCommand("swear").setExecutor(new Swear());
+        getCommand("swear").setTabCompleter(new TabCompleter());
+
         getServer().getPluginManager().registerEvents(new SwearListener(), this);
         File configFile = new File(getDataFolder(), "config.json");
 

@@ -26,4 +26,4 @@ commands:
   swear:
     description: Allows access to the blacklisted swears
     usage: /swear <action> <parameters>
-    aliases: [swear add, swear remove, swear]
+    aliases: [swer, swar, swears, bannedwords, blacklistedwords]
