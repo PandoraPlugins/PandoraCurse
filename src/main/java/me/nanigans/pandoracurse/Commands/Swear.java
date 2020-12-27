@@ -17,6 +17,7 @@ public class Swear implements CommandExecutor {
 
                 Player player = ((Player) sender);
                 new BlackListInventory(player, args[0]);
+                return true;
 
             }else{
                 sender.sendMessage(ChatColor.RED+"Please specify the word to blacklist");

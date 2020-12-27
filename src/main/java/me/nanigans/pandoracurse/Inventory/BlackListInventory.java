@@ -2,6 +2,7 @@ package me.nanigans.pandoracurse.Inventory;
 
 
 import me.nanigans.pandoracurse.PandoraCurse;
+import me.nanigans.pandoracurse.SwearWords.BlackListWords;
 import me.nanigans.pandoracurse.Utils.ItemUtils;
 import me.nanigans.pandoracurse.Utils.NBTData;
 import org.bukkit.Bukkit;
@@ -33,6 +34,7 @@ public class BlackListInventory implements Listener {
     private boolean fuzzySet = false;
     private boolean highSensitivity = true;
     private int fuzzyTolerance = 0;
+    private int oldTolerance = 0;
     private boolean switching = false;
     private final String bannedWord;
     private final static PandoraCurse plugin = PandoraCurse.getPlugin(PandoraCurse.class);
@@ -43,8 +45,13 @@ public class BlackListInventory implements Listener {
         put("setToggle", BlackListInventory.this::setToggle);
         put("decreaseTolerance", BlackListInventory.this::decreaseTolerance);
         put("increaseTolerance", BlackListInventory.this::increaseTolerance);
+        put("confirmFuzzy", BlackListInventory.this::confirmFuzzy);
+        put("back", BlackListInventory.this::back);
+        put("cancel", BlackListInventory.this::cancel);
+        put("confirm", BlackListInventory.this::confirm);
+
     }};
-    private final static Map<Integer, ItemStack> items = new HashMap<Integer, ItemStack>(){{
+    private final Map<Integer, ItemStack> items = new HashMap<Integer, ItemStack>(){{
        put(2, ItemUtils.createItem("160/5", "Increased Sensitivity", "METHOD~sensitivityToggle"));
        put(6, ItemUtils.createItem("160/5", "Alert Staff", "METHOD~staffToggle"));
        put(13, ItemUtils.createItem(Material.PAPER, "Banned Word"));
@@ -71,14 +78,43 @@ public class BlackListInventory implements Listener {
                 if(method != null && this.methods.containsKey(method)){
                     player.playSound(player.getLocation(), Sound.valueOf("CLICK"), 1, 1);
                     this.methods.get(method).execute(event);
-                    event.setCancelled(true);
                 }
             }
+            event.setCancelled(true);
 
         }
     }
 
-    public void increaseTolerance(InventoryClickEvent event){
+    private void confirm(InventoryClickEvent event){
+
+        final BlackListWords blackListWords = new BlackListWords(this);
+        blackListWords.addWord();
+        player.closeInventory();
+        player.playSound(player.getLocation(), Sound.valueOf("LEVEL_UP"), 1, 1);
+        player.sendMessage(ChatColor.GREEN+"Swear word added!");
+
+    }
+
+    private void cancel(InventoryClickEvent event){
+        player.closeInventory();
+    }
+
+    private void back(InventoryClickEvent event){
+        this.fuzzySet = false;
+        this.fuzzyTolerance = this.oldTolerance;
+        Inventory inv = createDefaultInv();
+        swapInventory(inv);
+        this.fuzzyToggle(event);
+    }
+
+    private void confirmFuzzy(InventoryClickEvent event){
+        this.fuzzySet = false;
+        Inventory inv = createDefaultInv();
+        swapInventory(inv);
+        this.fuzzyToggle(event);
+    }
+
+    private void increaseTolerance(InventoryClickEvent event){
         final ItemStack item = inv.getItem(13);
         if(item != null){
             final ItemStack currentItem = event.getCurrentItem();
@@ -89,7 +125,7 @@ public class BlackListInventory implements Listener {
         }
     }
 
-    public void decreaseTolerance(InventoryClickEvent event){
+    private void decreaseTolerance(InventoryClickEvent event){
 
         final ItemStack item = inv.getItem(13);
         if(item != null){
@@ -104,6 +140,7 @@ public class BlackListInventory implements Listener {
 
     private void setToggle(InventoryClickEvent event){
 
+        this.oldTolerance = this.fuzzyTolerance;
         Inventory inv = Bukkit.createInventory(player, 27, "Set Tolearance");
         inv.setMaxStackSize(100);
         inv.setItem(9, ItemUtils.createItem("160/14", ChatColor.RED+"Decrease by 1", 1, "METHOD~decreaseTolerance"));
@@ -138,6 +175,8 @@ public class BlackListInventory implements Listener {
             item = ItemUtils.createItem("160/14", "Use Fuzzy Match", "METHOD~fuzzyToggle");
         }
         inv.setItem(22, item);
+        items.replace(22, item);
+
     }
 
     private void staffToggle(InventoryClickEvent event){
@@ -148,6 +187,7 @@ public class BlackListInventory implements Listener {
             item = ItemUtils.createItem("160/5", "Alert Staff", "METHOD~staffToggle");
         else item = ItemUtils.createItem("160/14", "Alert Staff", "METHOD~staffToggle");
         inv.setItem(6, item);
+        items.replace(6, item);
     }
 
     private void sensitivityToggle(InventoryClickEvent event){
@@ -158,6 +198,7 @@ public class BlackListInventory implements Listener {
             item = ItemUtils.createItem("160/5", "Increased Sensitivity", "METHOD~sensitivityToggle");
         else item = ItemUtils.createItem("160/14", "Increased Sensitivity", "METHOD~sensitivityToggle");
         inv.setItem(2, item);
+        items.replace(2, item);
 
     }
 
